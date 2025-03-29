@@ -9,18 +9,26 @@ cloudinary.config({
 
 const uploaOnCloudinary = async (localPath) => {
   try {
-    if (!localPath) return null;
+    if (!localPath) {
+      console.error("Could not locate the file path, at line 12 cloudinary.js");
+      return null;
+    }
 
     const response = await cloudinary.uploader.upload(localPath, {
       resource_type: "auto",
+      folder: "youtube-backend",
+      use_filename: true,
     });
+    // file has been uploaded sucessfully
 
     fs.unlinkSync(localPath);
     console.log("What is the response see that : ", response);
     console.log("url of file uploaded : ", response.url);
+
+    return response;
   } catch (error) {
     console.error("Error uploading file to Cloudinary:", error);
-    fs.unlinkSync(localFilePath);
+    fs.unlinkSync(localPath);
     return null;
   }
 };

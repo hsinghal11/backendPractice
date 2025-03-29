@@ -25,8 +25,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-    avtar: {
+    avatar: {
       type: String, // cloudinary url
+      default: "https://res.cloudinary.com/dc2hx2zhw/image/upload/v1742378495/v7uzcotthgrbon9jkgur.png",
       required: true,
     },
     coverImage: {
@@ -60,7 +61,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this.id,
@@ -74,12 +75,12 @@ userSchema.method.generateAccessToken = function () {
   );
 };
 
-userSchema.method.generateAccessToken = function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this.id, // referesh token mai kam information raheti hai
     },
-    process.env.ACCESSREFERESH_TOKEN_SECRET,
+    process.env.REFERESH_TOKEN_SECRET,
     {
       expiresIn: process.env.REFERESH_TOKEN_EXPIRY,
     }
